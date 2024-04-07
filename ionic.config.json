@@ -1,0 +1,7 @@
+{
+  "name": "batuwa",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
