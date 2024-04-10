@@ -1,20 +1,118 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header  [translucent]="true">
+
+  <ion-toolbar color="dark">
     <ion-title>
-      Blank
+      Batuwa
     </ion-title>
   </ion-toolbar>
+  <ion-progress-bar *ngIf="!isLoaded" type="indeterminate" color="warning"></ion-progress-bar>
+
 </ion-header>
+<ng-container *ngIf="isAuthenticate">
+  <ion-content [fullscreen]="true" color="success">
+    <ion-header  collapse="condense">
+  
+      <ion-toolbar>
+        <ion-title size="large">Batuwa</ion-title>
+  
+      </ion-toolbar>
+    </ion-header>
+    <ion-searchbar [(ngModel)]="searchData" *ngIf="!message"></ion-searchbar>
+    <ng-container  *ngIf="!message">
+      <ion-list [inset]="true">
+        <ion-item *ngFor="let list of batuwaList | filterData : ['email', 'password'] : searchData" (click)="setOpen(true, list)">
+          <ion-label>{{list['email']}}</ion-label>
+          <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+    <div id="container">
+      <strong *ngIf="message">{{message}}</strong>
+    </div>
+  
+  </ion-content>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+    <ion-fab-button  id="open-modal" color="danger" >
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+      
+  </ion-fab>
+  <ion-modal  trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title>Add To Batuwa</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" [strong]="true">Save</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content  class="ion-padding">
+        <ion-item>
+          <ion-input
+            label="Enter Email Id"
+            labelPlacement="stacked"
+            type="text"
+            placeholder="Enter email id (ex: @gmail.com)"
+            [(ngModel)]="email"
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            label="Enter Password"
+            labelPlacement="stacked"
+            type="text"
+            placeholder="Enter Password"
+            [(ngModel)]="password"
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            label="Enter username"
+            labelPlacement="stacked"
+            type="text"
+            placeholder="Enter username"
+            [(ngModel)]="username"
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-textarea
+            label="Notes"
+            labelPlacement="stacked"
+            type="text"
+            placeholder="Notes"
+            [(ngModel)]="notes"
+          ></ion-textarea>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ng-container>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+
+<ion-modal [isOpen]="isModalOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{modalMetaInfo.email}}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="setOpen(false)">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-card color="medium">
+        <ion-card-header>
+          <ion-card-title>Email: {{modalMetaInfo.email}}</ion-card-title>
+          <ion-card-subtitle>Password: {{modalMetaInfo.password}}</ion-card-subtitle>
+          <ion-card-subtitle *ngIf="modalMetaInfo.username">Username: {{modalMetaInfo.username}}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content *ngIf="modalMetaInfo.notes"> {{modalMetaInfo.notes}} </ion-card-content>
+      </ion-card>
+    </ion-content>
+  </ng-template>
+</ion-modal>
